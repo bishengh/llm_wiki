@@ -54,6 +54,7 @@ llm_wiki/
 - **存储**：文件系统存储 (markdown 文件)
 - **处理**：大型语言模型 (LLM)
 - **集成**：支持多种文件格式 (PDF, DOCX, TXT, markdown)
+- **测试**：Jest 单元测试框架
 
 ## 如何使用
 

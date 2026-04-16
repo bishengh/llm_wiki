@@ -48,6 +48,7 @@
 - **Markdown处理**：Marked
 - **前端**：HTML, CSS, JavaScript
 - **存储**：文件系统（Markdown文件）
+- **测试**：Jest 单元测试框架
 
 ## 决策
 

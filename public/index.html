@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM 持久化 Wiki</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .nav {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .nav button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .nav button:hover {
+            background-color: #45a049;
+        }
+        
+        .section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4CAF50;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input[type="file"] {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100%;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .pages-list {
+            list-style: none;
+        }
+        
+        .pages-list li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .pages-list li:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .pages-list a {
+            text-decoration: none;
+            color: #333;
+        }
+        
+        .pages-list a:hover {
+            color: #4CAF50;
+        }
+        
+        .query-container {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .query-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .page-content {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+        
+        .markdown-content {
+            white-space: pre-wrap;
+        }
+        
+        .html-content {
+            line-height: 1.8;
+        }
+        
+        .html-content h1, .html-content h2, .html-content h3 {
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .html-content p {
+            margin-bottom: 15px;
+        }
+        
+        .html-content ul, .html-content ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .html-content li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>LLM 持久化 Wiki</h1>
+            <p class="subtitle">使用大型语言模型构建的智能知识管理系统</p>
+        </header>
+        
+        <div class="nav">
+            <button onclick="showSection('upload')">上传文件</button>
+            <button onclick="showSection('pages')">查看页面</button>
+            <button onclick="showSection('query')">查询交互</button>
+            <button onclick="showSection('maintenance')">系统维护</button>
+        </div>
+        
+        <!-- 上传文件部分 -->
+        <div id="upload" class="section">
+            <h2>上传文件</h2>
+            <form id="uploadForm">
+                <div class="form-group">
+                    <label for="file">选择文件:</label>
+                    <input type="file" id="file" name="file">
+                </div>
+                <button type="submit">上传并处理</button>
+            </form>
+            <div id="uploadResult" class="result"></div>
+        </div>
+        
+        <!-- 查看页面部分 -->
+        <div id="pages" class="section" style="display: none;">
+            <h2>Wiki 页面</h2>
+            <div id="pagesList" class="pages-list"></div>
+            <div id="pageContent" class="page-content"></div>
+        </div>
+        
+        <!-- 查询交互部分 -->
+        <div id="query" class="section" style="display: none;">
+            <h2>查询交互</h2>
+            <div class="query-container">
+                <input type="text" id="queryInput" class="query-input" placeholder="输入您的问题...">
+                <button onclick="processQuery()">发送</button>
+            </div>
+            <div id="queryResult" class="result"></div>
+        </div>
+        
+        <!-- 系统维护部分 -->
+        <div id="maintenance" class="section" style="display: none;">
+            <h2>系统维护</h2>
+            <button onclick="runMaintenance()">运行维护</button>
+            <button onclick="createBackup()">创建备份</button>
+            <button onclick="listBackups()">列出备份</button>
+            <div id="maintenanceResult" class="result"></div>
+        </div>
+    </div>
+    
+    <script>
+        // 显示指定部分
+        function showSection(sectionId) {
+            // 隐藏所有部分
+            document.querySelectorAll('.section').forEach(section => {
+                section.style.display = 'none';
+            });
+            // 显示指定部分
+            document.getElementById(sectionId).style.display = 'block';
+            
+            // 如果是页面部分，加载页面列表
+            if (sectionId === 'pages') {
+                loadPages();
+            }
+        }
+        
+        // 上传文件
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData();
+            const fileInput = document.getElementById('file');
+            formData.append('file', fileInput.files[0]);
+            
+            try {
+                const response = await fetch('/api/files/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                document.getElementById('uploadResult').innerHTML = JSON.stringify(result, null, 2);
+            } catch (error) {
+                document.getElementById('uploadResult').innerHTML = `错误: ${error.message}`;
+            }
+        });
+        
+        // 加载页面列表
+        async function loadPages() {
+            try {
+                const response = await fetch('/api/pages');
+                const result = await response.json();
+                if (result.success) {
+                    const pagesList = document.getElementById('pagesList');
+                    pagesList.innerHTML = '';
+                    result.data.forEach(page => {
+                        const li = document.createElement('li');
+                        const a = document.createElement('a');
+                        a.href = '#';
+                        a.textContent = page.title;
+                        a.onclick = () => loadPage(page.path);
+                        li.appendChild(a);
+                        pagesList.appendChild(li);
+                    });
+                }
+            } catch (error) {
+                console.error('加载页面列表失败:', error);
+            }
+        }
+        
+        // 加载页面内容
+        async function loadPage(pagePath) {
+            try {
+                const response = await fetch(`/api/pages/${encodeURIComponent(pagePath)}`);
+                const result = await response.json();
+                if (result.success) {
+                    const pageContent = document.getElementById('pageContent');
+                    pageContent.innerHTML = `<div class="html-content">${result.data.html}</div>`;
+                }
+            } catch (error) {
+                console.error('加载页面失败:', error);
+            }
+        }
+        
+        // 处理查询
+        async function processQuery() {
+            const query = document.getElementById('queryInput').value;
+            if (!query) return;
+            
+            try {
+                const response = await fetch('/api/interaction/query', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ query })
+                });
+                const result = await response.json();
+                document.getElementById('queryResult').innerHTML = JSON.stringify(result, null, 2);
+            } catch (error) {
+                document.getElementById('queryResult').innerHTML = `错误: ${error.message}`;
+            }
+        }
+        
+        // 运行维护
+        async function runMaintenance() {
+            try {
+                const response = await fetch('/api/maintenance/run', {
+                    method: 'POST'
+                });
+                const result = await response.json();
+                document.getElementById('maintenanceResult').innerHTML = JSON.stringify(result, null, 2);
+            } catch (error) {
+                document.getElementById('maintenanceResult').innerHTML = `错误: ${error.message}`;
+            }
+        }
+        
+        // 创建备份
+        async function createBackup() {
+            try {
+                const response = await fetch('/api/maintenance/backup', {
+                    method: 'POST'
+                });
+                const result = await response.json();
+                document.getElementById('maintenanceResult').innerHTML = JSON.stringify(result, null, 2);
+            } catch (error) {
+                document.getElementById('maintenanceResult').innerHTML = `错误: ${error.message}`;
+            }
+        }
+        
+        // 列出备份
+        async function listBackups() {
+            try {
+                const response = await fetch('/api/maintenance/backups');
+                const result = await response.json();
+                document.getElementById('maintenanceResult').innerHTML = JSON.stringify(result, null, 2);
+            } catch (error) {
+                document.getElementById('maintenanceResult').innerHTML = `错误: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -157,6 +157,11 @@ class WikiInteraction {
       const feedbackFile = path.join(this.wikiPath, 'feedback.json');
       let feedbacks = [];
       
+      // 确保wiki目录存在
+      if (!await fs.exists(this.wikiPath)) {
+        await fs.mkdir(this.wikiPath, { recursive: true });
+      }
+      
       if (await fs.exists(feedbackFile)) {
         feedbacks = await fs.readJSON(feedbackFile);
       }

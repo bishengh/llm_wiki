@@ -254,11 +254,22 @@ class WikiMaintenance {
       }
       
       const backupFiles = await fs.readdir(this.backupPath);
-      const backups = backupFiles.map(file => ({
-        fileName: file,
-        path: path.join(this.backupPath, file),
-        createdAt: new Date(path.basename(file).split('_')[1].split('.')[0]).toISOString()
-      }));
+      const backups = backupFiles.map(file => {
+        let createdAt = new Date().toISOString();
+        try {
+          const timestamp = path.basename(file).split('_')[1]?.split('.')[0];
+          if (timestamp) {
+            createdAt = new Date(parseInt(timestamp)).toISOString();
+          }
+        } catch (error) {
+          console.log('解析备份文件时间戳失败:', error.message);
+        }
+        return {
+          fileName: file,
+          path: path.join(this.backupPath, file),
+          createdAt: createdAt
+        };
+      });
       
       return {
         success: true,

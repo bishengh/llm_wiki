@@ -9,6 +9,7 @@
 - 开发更新实体页面、修改主题摘要和维护知识连接的机制
 - 建立工作流程，允许用户与wiki交互并根据需要请求更新
 - 实现系统维护功能，包括内容验证、性能优化和备份恢复
+- 添加全面的测试覆盖，包括单元测试和集成测试
 
 ## 功能
 
@@ -18,6 +19,7 @@
 - `knowledge-integration`: 将提取的信息集成到现有wiki中的机制
 - `wiki-interaction`: 用户与wiki交互和查询的界面
 - `wiki-maintenance`: 随时间更新和维护wiki的过程
+- `testing`: 全面的测试覆盖，包括单元测试和集成测试
 
 ### 修改的功能
 
@@ -29,6 +31,7 @@
 - 持久wiki数据的存储要求
 - 增量更新的处理要求
 - 系统维护和备份的存储要求
+- 测试框架和测试数据的存储要求
 
 ## 实施状态
 
@@ -37,13 +40,17 @@
 - 前端界面，支持文件上传、页面浏览、查询交互和系统维护
 - API接口，提供完整的功能访问
 - 服务器配置和部署准备
+- 单元测试 (Jest)
+- 集成测试
+- 文档更新
 
 ## 技术实现
 
-- **后端**：Node.js, Express, Multer, Marked, fs-extra
+- **后端**：Node.js, Express, Multer, Marked, fs-extra, uuid
 - **前端**：HTML, CSS, JavaScript
 - **存储**：文件系统存储 (markdown 文件)
 - **API**：RESTful API设计
+- **测试**：Jest 单元测试框架, Axios (API测试)
 
 ## 部署要求
 

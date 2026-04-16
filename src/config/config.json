@@ -1,0 +1,11 @@
+{
+  "wikiPath": "/Users/zhang/source/llm_wiki/src/wiki",
+  "port": 3000,
+  "maxFileSize": 10485760,
+  "supportedFormats": [
+    "pdf",
+    "docx",
+    "txt",
+    "md"
+  ]
+}

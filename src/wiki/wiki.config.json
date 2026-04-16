@@ -1,0 +1,15 @@
+{
+  "name": "LLM 持久化 Wiki",
+  "description": "使用 LLM 构建的持久化知识管理系统",
+  "version": "0.1.0",
+  "created": "2026-04-16T01:41:10.075Z",
+  "lastUpdated": "2026-04-16T01:41:10.075Z",
+  "defaultLanguage": "zh-CN",
+  "structure": {
+    "entities": "实体页面",
+    "topics": "主题页面",
+    "attachments": "附件",
+    "history": "历史记录",
+    "templates": "模板"
+  }
+}

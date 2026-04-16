@@ -17,7 +17,7 @@ const port = 3000;
 // 中间件
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, '../public')));
 
 // 配置目录
 const configDir = path.join(__dirname, 'config');
